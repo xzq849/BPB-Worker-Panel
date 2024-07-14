@@ -1,6 +1,6 @@
 <h1 align="center">💦 BPB Panel</h1>
 
-### 🌏 Readme in [English](README_en.md)
+### 🌏 Readme in [English](README_e.md)
 
 <p align="center">
   <img src="docs/assets/images/Panel.jpg">
