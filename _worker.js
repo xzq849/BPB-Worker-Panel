@@ -23,10 +23,10 @@ let dohURL = 'https://cloudflare-dns.com/dns-query';
 let panelVersion = '2.4.5';
 
 if (!isValidUUID(userID)) {
-    throw new Error('uuid is not valid');
+    throw 新建 Error('uuid is not valid');
 }
 
-export default {
+输出 默认 {
     /**
      * @param {import("@cloudflare/workers-types").Request} request
      * @param {{UUID: string, PROXYIP: string, DNS_RESOLVER_URL: string}} env
@@ -43,16 +43,16 @@ export default {
             
             if (!upgradeHeader || upgradeHeader !== 'websocket') {
                 
-                const url = new URL(request.url);
-                const searchParams = new URLSearchParams(url.search);
+                const url = 新建 URL(request.url);
+                const searchParams = 新建 URLSearchParams(url.搜索);
                 const host = request.headers.get('Host');
                 const client = searchParams.get('app');
 
                 switch (url.pathname) {
 
                     case '/cf':
-                        return new Response(JSON.stringify(request.cf, null, 4), {
-                            status: 200,
+                        return 新建 Response(JSON.stringify(request.cf, null, 4), {
+                            状态: 200,
                             headers: {
                                 'Content-Type': 'application/json;charset=utf-8',
                             },
@@ -62,50 +62,50 @@ export default {
 
                         if (client === 'sfa') {
                             const BestPingSFA = await getSingboxConfig(env, host);
-                            return new Response(`${JSON.stringify(BestPingSFA, null, 4)}`, { status: 200 });                            
+                            return 新建 Response(`${JSON.stringify(BestPingSFA, null， 4)}`， { 状态: 200 });                            
                         }
                         const normalConfigs = await getNormalConfigs(env, host, client);
-                        return new Response(normalConfigs, { status: 200 });                        
+                        return 新建 Response(normalConfigs, { 状态: 200 });                        
 
                     case `/fragsub/${userID}`:
 
                         let fragConfigs = await getFragmentConfigs(env, host, 'v2ray');
                         fragConfigs = fragConfigs.map(config => config.config);
 
-                        return new Response(`${JSON.stringify(fragConfigs, null, 4)}`, { status: 200 });
+                        return 新建 Response(`${JSON.stringify(fragConfigs, null, 4)}`, { 状态: 200 });
 
                     case `/warpsub/${userID}`:
 
                         const wowConfig = await getWarpConfigs(env, client);
-                        return new Response(`${JSON.stringify(wowConfig, null, 4)}`, { status: 200 });
+                        return 新建 Response(`${JSON.stringify(wowConfig, null, 4)}`, { 状态: 200 });
 
                     case '/panel':
 
                         if (typeof env.bpb !== 'object') {
                             const errorPage = renderErrorPage('KV Dataset is not properly set!', null, true);
-                            return new Response(errorPage, { status: 200, headers: {'Content-Type': 'text/html'}});
+                            return 新建 Response(errorPage, { 状态: 200, headers: {'Content-Type': 'text/html'}});
                         }
 
                         const isAuth = await Authenticate(request, env); 
                         
                         if (request.method === 'POST') {
                             
-                            if (!isAuth) return new Response('Unauthorized', { status: 401 });             
+                            if (!isAuth) return 新建 Response('Unauthorized', { 状态: 401 });             
                             const formData = await request.formData();
                             await updateDataset(env, formData);
 
-                            return new Response('Success', { status: 200 });
+                            return 新建 Response('Success', { 状态: 200 });
                         }
                         
                         if (!isAuth) return Response.redirect(`${url.origin}/login`, 302);
-                        const proxySettings = await env.bpb.get("proxySettings", {type: 'json'});
+                        const proxySettings = await env.bpb.get("proxySettings", {请键入: 'json'});
                         const isUpdated = panelVersion === proxySettings?.panelVersion;
                         if (!proxySettings || !isUpdated) await updateDataset(env);
                         const fragConfs = await getFragmentConfigs(env, host, 'nekoray');
                         const homePage = await renderHomePage(env, host, fragConfs);
 
-                        return new Response(homePage, {
-                            status: 200,
+                        return 新建 Response(homePage, {
+                            状态: 200,
                             headers: {
                                 'Content-Type': 'text/html',
                                 'Access-Control-Allow-Origin': url.origin,
@@ -121,7 +121,7 @@ export default {
 
                         if (typeof env.bpb !== 'object') {
                             const errorPage = renderErrorPage('KV Dataset is not properly set!', null, true);
-                            return new Response(errorPage, { status: 200, headers: {'Content-Type': 'text/html'}});
+                            return 新建 Response(errorPage, { 状态: 200, headers: {'Content-Type': 'text/html'}});
                         }
 
                         const loginAuth = await Authenticate(request, env);
@@ -137,29 +137,29 @@ export default {
                         }
 
                         if (request.method === 'POST') {
-                            const password = await request.text();
+                            const 密码 = await request.text();
                             const savedPass = await env.bpb.get('pwd');
 
                             if (password === savedPass) {
                                 const jwtToken = generateJWTToken(secretKey, password);
                                 const cookieHeader = `jwtToken=${jwtToken}; HttpOnly; Secure; Max-Age=${7 * 24 * 60 * 60}; Path=/; SameSite=Strict`;
                                 
-                                return new Response('Success', {
-                                    status: 200,
+                                return 新建 Response('Success', {
+                                    状态: 200,
                                     headers: {
                                       'Set-Cookie': cookieHeader,
                                       'Content-Type': 'text/plain',
                                     }
                                 });        
                             } else {
-                                return new Response('Method Not Allowed', { status: 405 });
+                                return 新建 Response('Method Not Allowed', { 状态: 405 });
                             }
                         }
                         
                         const loginPage = await renderLoginPage();
 
-                        return new Response(loginPage, {
-                            status: 200,
+                        return 新建 Response(loginPage, {
+                            状态: 200,
                             headers: {
                                 'Content-Type': 'text/html',
                                 'Access-Control-Allow-Origin': url.origin,
@@ -173,8 +173,8 @@ export default {
                     
                     case '/logout':
                                     
-                        return new Response('Success', {
-                            status: 200,
+                        return 新建 Response('Success', {
+                            状态: 200,
                             headers: {
                                 'Set-Cookie': 'jwtToken=; Secure; SameSite=None; Expires=Thu, 01 Jan 1970 00:00:00 GMT',
                                 'Content-Type': 'text/plain'
@@ -184,25 +184,25 @@ export default {
                     case '/panel/password':
 
                         let passAuth = await Authenticate(request, env);
-                        if (!passAuth) return new Response('Unauthorized!', { status: 401 });           
+                        if (!passAuth) return 新建 Response('Unauthorized!', { 状态: 401 });           
                         const newPwd = await request.text();
                         const oldPwd = await env.bpb.get('pwd');
-                        if (newPwd === oldPwd) return new Response('Please enter a new Password!', { status: 400 });
+                        if (newPwd === oldPwd) return 新建 Response('Please enter a new Password!', { 状态: 400 });
                         await env.bpb.put('pwd', newPwd);
 
-                        return new Response('Success', {
-                            status: 200,
+                        return 新建 Response('Success', {
+                            状态: 200,
                             headers: {
                                 'Set-Cookie': 'jwtToken=; Path=/; Secure; SameSite=None; Expires=Thu, 01 Jan 1970 00:00:00 GMT',
                                 'Content-Type': 'text/plain',
                             }
                         });
 
-                    default:
-                        // return new Response('Not found', { status: 404 });
+                    默认:
+                        return 新建 Response('Not found'， { 状态: 404 });
                         url.hostname = 'www.speedtest.net';
                         url.protocol = 'https:';
-                        request = new Request(url, request);
+                        request = 新建 Request(url, request);
                         return await fetch(request);
                 }
             } else {
@@ -211,7 +211,7 @@ export default {
         } catch (err) {
             /** @type {Error} */ let e = err;
             const errorPage = renderErrorPage('Something went wrong!', e.message.toString(), false);
-            return new Response(errorPage, { status: 200, headers: {'Content-Type': 'text/html'}});
+            return 新建 Response(errorPage, { 状态: 200, headers: {'Content-Type': 'text/html'}});
         }
     },
 };
@@ -222,13 +222,13 @@ export default {
  * @returns {Promise<Response>} A Promise that resolves to a WebSocket response object.
  */
 async function vlessOverWSHandler(request) {
-	const webSocketPair = new WebSocketPair();
+	const webSocketPair = 新建 WebSocketPair();
 	const [client, webSocket] = Object.values(webSocketPair);
 	webSocket.accept();
 
 	let address = '';
 	let portWithRandomLog = '';
-	let currentDate = new Date();
+	let currentDate = 新建 日期();
 	const log = (/** @type {string} */ info, /** @type {string | undefined} */ event) => {
 		console.log(`[${currentDate} ${address}:${portWithRandomLog}] ${info}`, event || '');
 	};
@@ -244,14 +244,14 @@ async function vlessOverWSHandler(request) {
 	let isDns = false;
 
 	// ws --> remote
-	readableWebSocketStream.pipeTo(new WritableStream({
-		async write(chunk, controller) {
+	readableWebSocketStream.pipeTo(新建 WritableStream({
+		async 撰写(chunk, controller) {
 			if (isDns && udpStreamWrite) {
 				return udpStreamWrite(chunk);
 			}
 			if (remoteSocketWapper.value) {
 				const writer = remoteSocketWapper.value.writable.getWriter()
-				await writer.write(chunk);
+				await writer.撰写(chunk);
 				writer.releaseLock();
 				return;
 			}
@@ -262,21 +262,21 @@ async function vlessOverWSHandler(request) {
 				portRemote = 443,
 				addressRemote = '',
 				rawDataIndex,
-				vlessVersion = new Uint8Array([0, 0]),
+				vlessVersion = 新建 Uint8Array([0, 0]),
 				isUDP,
 			} = processVlessHeader(chunk, userID);
 			address = addressRemote;
 			portWithRandomLog = `${portRemote} ${isUDP ? 'udp' : 'tcp'} `;
 			if (hasError) {
 				// controller.error(message);
-				throw new Error(message); // cf seems has bug, controller.error will not end stream
+				throw 新建 Error(message); // cf seems has bug, controller.error will not end stream
 				// webSocket.close(1000, message);
 				return;
 			}
 
 			// If UDP and not DNS port, close it
 			if (isUDP && portRemote !== 53) {
-				throw new Error('UDP proxy only enabled for DNS which is port 53');
+				throw 新建 Error('UDP proxy only enabled for DNS which is port 53');
 				// cf seems has bug, controller.error will not end stream
 			}
 
@@ -285,12 +285,12 @@ async function vlessOverWSHandler(request) {
 			}
 
 			// ["version", "附加信息长度 N"]
-			const vlessResponseHeader = new Uint8Array([vlessVersion[0], 0]);
+			const vlessResponseHeader = 新建 Uint8Array([vlessVersion[0], 0]);
 			const rawClientData = chunk.slice(rawDataIndex);
 
 			// TODO: support udp here when cf runtime has udp support
 			if (isDns) {
-				const { write } = await handleUDPOutBound(webSocket, vlessResponseHeader, log);
+				const { 撰写 } = await handleUDPOutBound(webSocket, vlessResponseHeader, log);
 				udpStreamWrite = write;
 				udpStreamWrite(rawClientData);
 				return;
@@ -307,8 +307,8 @@ async function vlessOverWSHandler(request) {
 		log('readableWebSocketStream pipeTo error', err);
 	});
 
-	return new Response(null, {
-		status: 101,
+	return 新建 Response(null, {
+		状态: 101,
 		webSocket: client,
 	});
 }
@@ -342,7 +342,7 @@ async function handleTCPOutBound(request, remoteSocket, addressRemote, portRemot
 		remoteSocket.value = tcpSocket;
 		log(`connected to ${address}:${port}`);
 		const writer = tcpSocket.writable.getWriter();
-		await writer.write(rawClientData); // first write, nomal is tls client hello
+		await writer.撰写(rawClientData); // first write, nomal is tls client hello
 		writer.releaseLock();
 		return tcpSocket;
 	}
@@ -352,11 +352,11 @@ async function handleTCPOutBound(request, remoteSocket, addressRemote, portRemot
 	 * @returns {Promise<void>} A Promise that resolves when the retry is complete.
 	 */
 	async function retry() {
-        const { pathname } = new URL(request.url);
-        let panelProxyIP = pathname.split('/')[2];
+        const { pathname } = 新建 URL(request.url);
+        let panelProxyIP = pathname.分屏('/')[2];
         panelProxyIP = panelProxyIP ? atob(panelProxyIP) : undefined;
 		const tcpSocket = await connectAndWrite(panelProxyIP || proxyIP || addressRemote, portRemote);
-		tcpSocket.closed.catch(error => {
+		tcpSocket.关闭.catch(error => {
 			console.log('retry tcpSocket closed error', error);
 		}).finally(() => {
 			safeCloseWebSocket(webSocket);
@@ -380,7 +380,7 @@ async function handleTCPOutBound(request, remoteSocket, addressRemote, portRemot
  */
 function makeReadableWebSocketStream(webSocketServer, earlyDataHeader, log) {
 	let readableStreamCancel = false;
-	const stream = new ReadableStream({
+	const stream = 新建 ReadableStream({
 		start(controller) {
 			webSocketServer.addEventListener('message', (event) => {
 				const message = event.data;
@@ -409,7 +409,7 @@ function makeReadableWebSocketStream(webSocketServer, earlyDataHeader, log) {
 			// https://streams.spec.whatwg.org/#example-rs-push-backpressure
 		},
 
-		cancel(reason) {
+		取消(reason) {
 			log(`ReadableStream was canceled, due to ${reason}`)
 			readableStreamCancel = true;
 			safeCloseWebSocket(webSocketServer);
@@ -445,13 +445,13 @@ function processVlessHeader(vlessBuffer, userID) {
 		};
 	}
 
-	const version = new Uint8Array(vlessBuffer.slice(0, 1));
+	const version = 新建 Uint8Array(vlessBuffer.slice(0, 1));
 	let isValidUser = false;
 	let isUDP = false;
-	const slicedBuffer = new Uint8Array(vlessBuffer.slice(1, 17));
+	const slicedBuffer = 新建 Uint8Array(vlessBuffer.slice(1, 17));
 	const slicedBufferString = stringify(slicedBuffer);
 	// check if userID is valid uuid or uuids split by , and contains userID in it otherwise return error message to console
-	const uuids = userID.includes(',') ? userID.split(",") : [userID];
+	const uuids = userID.includes(',') ? userID.分屏(",") : [userID];
 	// uuid_validator(hostName, slicedBufferString);
 
 
@@ -467,10 +467,10 @@ function processVlessHeader(vlessBuffer, userID) {
 		};
 	}
 
-	const optLength = new Uint8Array(vlessBuffer.slice(17, 18))[0];
+	const optLength = 新建 Uint8Array(vlessBuffer.slice(17, 18))[0];
 	//skip opt for now
 
-	const command = new Uint8Array(
+	const command = 新建 Uint8Array(
 		vlessBuffer.slice(18 + optLength, 18 + optLength + 1)
 	)[0];
 
@@ -490,10 +490,10 @@ function processVlessHeader(vlessBuffer, userID) {
 	const portIndex = 18 + optLength + 1;
 	const portBuffer = vlessBuffer.slice(portIndex, portIndex + 2);
 	// port is big-Endian in raw data etc 80 == 0x005d
-	const portRemote = new DataView(portBuffer).getUint16(0);
+	const portRemote = 新建 DataView(portBuffer).getUint16(0);
 
 	let addressIndex = portIndex + 2;
-	const addressBuffer = new Uint8Array(
+	const addressBuffer = 新建 Uint8Array(
 		vlessBuffer.slice(addressIndex, addressIndex + 1)
 	);
 
@@ -507,22 +507,22 @@ function processVlessHeader(vlessBuffer, userID) {
 	switch (addressType) {
 		case 1:
 			addressLength = 4;
-			addressValue = new Uint8Array(
+			addressValue = 新建 Uint8Array(
 				vlessBuffer.slice(addressValueIndex, addressValueIndex + addressLength)
 			).join('.');
 			break;
 		case 2:
-			addressLength = new Uint8Array(
+			addressLength = 新建 Uint8Array(
 				vlessBuffer.slice(addressValueIndex, addressValueIndex + 1)
 			)[0];
 			addressValueIndex += 1;
-			addressValue = new TextDecoder().decode(
+			addressValue = 新建 TextDecoder().decode(
 				vlessBuffer.slice(addressValueIndex, addressValueIndex + addressLength)
 			);
 			break;
 		case 3:
 			addressLength = 16;
-			const dataView = new DataView(
+			const dataView = 新建 DataView(
 				vlessBuffer.slice(addressValueIndex, addressValueIndex + addressLength)
 			);
 			// 2001:0db8:85a3:0000:0000:8a2e:0370:7334
@@ -533,7 +533,7 @@ function processVlessHeader(vlessBuffer, userID) {
 			addressValue = ipv6.join(':');
 			// seems no need add [] for ipv6
 			break;
-		default:
+		默认:
 			return {
 				hasError: true,
 				message: `invild  addressType is ${addressType}`,
@@ -576,7 +576,7 @@ async function remoteSocketToWS(remoteSocket, webSocket, vlessResponseHeader, re
 	let hasIncomingData = false; // check if remoteSocket has incoming data
 	await remoteSocket.readable
 		.pipeTo(
-			new WritableStream({
+			新建 WritableStream({
 				start() {
 				},
 				/**
@@ -584,7 +584,7 @@ async function remoteSocketToWS(remoteSocket, webSocket, vlessResponseHeader, re
 				 * @param {Uint8Array} chunk 
 				 * @param {*} controller 
 				 */
-				async write(chunk, controller) {
+				async 撰写(chunk, controller) {
 					hasIncomingData = true;
 					remoteChunkCount++;
 					if (webSocket.readyState !== WS_READY_STATE_OPEN) {
@@ -593,7 +593,7 @@ async function remoteSocketToWS(remoteSocket, webSocket, vlessResponseHeader, re
 						);
 					}
 					if (vlessHeader) {
-						webSocket.send(await new Blob([vlessHeader, chunk]).arrayBuffer());
+						webSocket.send(await 新建 Blob([vlessHeader, chunk]).arrayBuffer());
 						vlessHeader = null;
 					} else {
 						// console.log(`remoteSocketToWS send chunk ${chunk.byteLength}`);
@@ -707,7 +707,7 @@ function stringify(arr, offset = 0) {
 async function handleUDPOutBound(webSocket, vlessResponseHeader, log) {
 
 	let isVlessHeaderSent = false;
-	const transformStream = new TransformStream({
+	const transformStream = 新建 TransformStream({
 		start(controller) {
 
 		},
@@ -716,8 +716,8 @@ async function handleUDPOutBound(webSocket, vlessResponseHeader, log) {
 			// TODO: this should have bug, beacsue maybe udp chunk can be in two websocket message
 			for (let index = 0; index < chunk.byteLength;) {
 				const lengthBuffer = chunk.slice(index, index + 2);
-				const udpPakcetLength = new DataView(lengthBuffer).getUint16(0);
-				const udpData = new Uint8Array(
+				const udpPakcetLength = 新建 DataView(lengthBuffer).getUint16(0);
+				const udpData = 新建 Uint8Array(
 					chunk.slice(index + 2, index + 2 + udpPakcetLength)
 				);
 				index = index + 2 + udpPakcetLength;
@@ -729,26 +729,26 @@ async function handleUDPOutBound(webSocket, vlessResponseHeader, log) {
 	});
 
 	// only handle dns udp for now
-	transformStream.readable.pipeTo(new WritableStream({
-		async write(chunk) {
+	transformStream.readable.pipeTo(新建 WritableStream({
+		async 撰写(chunk) {
 			const resp = await fetch(dohURL, // dns server url
 				{
 					method: 'POST',
 					headers: {
 						'content-type': 'application/dns-message',
 					},
-					body: chunk,
+					内容: chunk,
 				})
 			const dnsQueryResult = await resp.arrayBuffer();
 			const udpSize = dnsQueryResult.byteLength;
 			// console.log([...new Uint8Array(dnsQueryResult)].map((x) => x.toString(16)));
-			const udpSizeBuffer = new Uint8Array([(udpSize >> 8) & 0xff, udpSize & 0xff]);
+			const udpSizeBuffer = 新建 Uint8Array([(udpSize >> 8) & 0xff, udpSize & 0xff]);
 			if (webSocket.readyState === WS_READY_STATE_OPEN) {
 				log(`doh success and dns message length is ${udpSize}`);
 				if (isVlessHeaderSent) {
-					webSocket.send(await new Blob([udpSizeBuffer, dnsQueryResult]).arrayBuffer());
+					webSocket.send(await 新建 Blob([udpSizeBuffer, dnsQueryResult]).arrayBuffer());
 				} else {
-					webSocket.send(await new Blob([vlessResponseHeader, udpSizeBuffer, dnsQueryResult]).arrayBuffer());
+					webSocket.send(await 新建 Blob([vlessResponseHeader, udpSizeBuffer, dnsQueryResult]).arrayBuffer());
 					isVlessHeaderSent = true;
 				}
 			}
@@ -764,8 +764,8 @@ async function handleUDPOutBound(webSocket, vlessResponseHeader, log) {
 		 * 
 		 * @param {Uint8Array} chunk 
 		 */
-		write(chunk) {
-			writer.write(chunk);
+		撰写(chunk) {
+			writer.撰写(chunk);
 		}
 	};
 }
@@ -782,10 +782,10 @@ const getNormalConfigs = async (env, hostName, client) => {
     let vlessWsTls = '';
 
     try {
-        proxySettings = await env.bpb.get("proxySettings", {type: 'json'});
+        proxySettings = await env.bpb.get("proxySettings", {请键入: 'json'});
     } catch (error) {
         console.log(error);
-        throw new Error(`An error occurred while getting normal configs - ${error}`);
+        throw 新建 Error(`An error occurred while getting normal configs - ${error}`);
     }
 
     const { cleanIPs, proxyIP, ports } = proxySettings;
@@ -795,7 +795,7 @@ const getNormalConfigs = async (env, hostName, client) => {
         'www.speedtest.net',
         ...resolved.ipv4,
         ...resolved.ipv6.map((ip) => `[${ip}]`),
-        ...(cleanIPs ? cleanIPs.split(',') : [])
+        ...(cleanIPs ? cleanIPs.分屏(',') : [])
     ];
 
     ports.forEach(port => {
